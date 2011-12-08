@@ -1,0 +1,149 @@
+<html>
+  <head>
+    <title>Canvas tutorial template</title>
+	<script type="text/javascript" src="js/classes/dbg.js"></script>
+	<script type="text/javascript" src="js/classes/tools.js"></script>
+	<script type="text/javascript" src="js/classes/draw.js"></script>
+    <script type="text/javascript">
+		var ctx;
+		function init() {
+			ctx = document.getElementById('canvas').getContext('2d');  			
+			timeline.do();
+		}
+		
+		//this is a general class	
+		var timeline = {
+			currentFrame: 0,
+			fps: 24, //frame per second
+			//play_animation: true, 
+			debug: true,
+			in_progress: false, //if true we should continue loop
+			center_point: {x:175, y:175} //default center point of all objects
+		};
+
+		timeline.do = function(){
+			var _instance = this;
+			this.currentFrame++;
+			ctx.clearRect(0,0,500,500);
+
+			if(this.debug) 
+				dbg.draw("currentFrame = "+this.currentFrame);
+			
+			//First arc
+			var arParams = {
+				angle:{start:285,end:255}, 
+				second:{start:1,length:1},
+				radius:50
+			}
+			draw.doubleArc(arParams);	
+
+			//First arc text			
+			var arParams = {
+				point:{x:166, y:130},
+				second:{start:2},
+				text: "1/2"
+			}
+			draw.text(arParams);	
+			
+			//Second arc
+			var arParams = {
+				angle:{start:190,end:170}, 
+				second:{start:2,length:1},
+				radius:60
+			}			
+			draw.doubleArc(arParams);	
+
+			//Second arc text			
+			var arParams = {
+				point:{x:166, y:-175+61},
+				second:{start:3},
+				text: "1/4",
+				rotate: 90
+			}
+			draw.text(arParams);			
+
+            //Third arc
+            var arParams = {
+                angle:{start:100,end:80}, 
+                second:{start:3,length:1},
+                radius:70
+            }
+            draw.doubleArc(arParams);    
+
+            //Third arc text            
+            var arParams = {
+                point:{x:167, y:175+70},
+                second:{start:4},
+                text: "1/8"
+            }
+            draw.text(arParams);  
+
+			//Fourth circle
+            var arParams = {
+                angle:{start:90,end:90}, 
+                second:{start:3.5,length:1},
+                radius:80
+            }
+			draw.doubleArc(arParams);
+
+            var arParams = {
+                point:{x:400,y:175},
+                second:{start:5,length:3},
+            }
+			draw.moveCenterPointX(arParams);	
+            
+			//loop
+			if(this.in_progress){
+				setTimeout(function(){				
+					_instance.do()
+				}, parseInt(1000/_instance.fps));
+			}
+		}						
+
+		timeline.getFrameData = function(arParams){
+		
+			this.in_progress = false;
+				
+			var frame = {};
+			frame.current = {};
+			
+			frame.current.global = this.currentFrame;
+			
+			//convert starting second to frame
+			if(arParams.second.start){
+				frame.start = arParams.second.start * this.fps;
+				frame.current.local = frame.current.global - frame.start;
+			}
+
+			//wait for animation time
+			if(frame.current.global < frame.start){
+				this.in_progress = true;
+				return false;
+			}
+			
+			//convert endinf second to frame
+			if(arParams.second.start && arParams.second.length){
+				frame.end = (arParams.second.start + arParams.second.length) * this.fps;	
+				frame.diff = frame.end - frame.start;
+			} else {
+				frame.end = frame.start;	
+				frame.diff = 0;			
+			}
+			
+			//if last frame has been played
+			if(frame.current.global <= frame.end){
+				this.in_progress = true;
+			}
+			
+			return frame;
+		}		
+
+	</script>
+    <style type="text/css">
+      canvas { border: 2px solid black; }
+    </style>
+  </head>
+  <body onload="init();">
+    <canvas id="canvas" width="900" height="500"></canvas>
+  </body>
+</html>

@@ -1,149 +1,257 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
-    <title>Canvas tutorial template</title>
-	<script type="text/javascript" src="js/classes/dbg.js"></script>
-	<script type="text/javascript" src="js/classes/tools.js"></script>
-	<script type="text/javascript" src="js/classes/draw.js"></script>
-    <script type="text/javascript">
-		var ctx;
-		function init() {
-			ctx = document.getElementById('canvas').getContext('2d');  			
-			timeline.do();
-		}
-		
-		//this is a general class	
-		var timeline = {
-			currentFrame: 0,
-			fps: 24, //frame per second
-			//play_animation: true, 
-			debug: true,
-			in_progress: false, //if true we should continue loop
-			center_point: {x:175, y:175} //default center point of all objects
-		};
-
-		timeline.do = function(){
-			var _instance = this;
-			this.currentFrame++;
-			ctx.clearRect(0,0,500,500);
-
-			if(this.debug) 
-				dbg.draw("currentFrame = "+this.currentFrame);
-			
-			//First arc
-			var arParams = {
-				angle:{start:285,end:255}, 
-				second:{start:1,length:1},
-				radius:50
-			}
-			draw.doubleArc(arParams);	
-
-			//First arc text			
-			var arParams = {
-				point:{x:166, y:130},
-				second:{start:2},
-				text: "1/2"
-			}
-			draw.text(arParams);	
-			
-			//Second arc
-			var arParams = {
-				angle:{start:190,end:170}, 
-				second:{start:2,length:1},
-				radius:60
-			}			
-			draw.doubleArc(arParams);	
-
-			//Second arc text			
-			var arParams = {
-				point:{x:166, y:-175+61},
-				second:{start:3},
-				text: "1/4",
-				rotate: 90
-			}
-			draw.text(arParams);			
-
-            //Third arc
-            var arParams = {
-                angle:{start:100,end:80}, 
-                second:{start:3,length:1},
-                radius:70
-            }
-            draw.doubleArc(arParams);    
-
-            //Third arc text            
-            var arParams = {
-                point:{x:167, y:175+70},
-                second:{start:4},
-                text: "1/8"
-            }
-            draw.text(arParams);  
-
-			//Fourth circle
-            var arParams = {
-                angle:{start:90,end:90}, 
-                second:{start:3.5,length:1},
-                radius:80
-            }
-			draw.doubleArc(arParams);
-
-            var arParams = {
-                point:{x:400,y:175},
-                second:{start:5,length:3},
-            }
-			draw.moveCenterPointX(arParams);	
-            
-			//loop
-			if(this.in_progress){
-				setTimeout(function(){				
-					_instance.do()
-				}, parseInt(1000/_instance.fps));
-			}
-		}						
-
-		timeline.getFrameData = function(arParams){
-		
-			this.in_progress = false;
-				
-			var frame = {};
-			frame.current = {};
-			
-			frame.current.global = this.currentFrame;
-			
-			//convert starting second to frame
-			if(arParams.second.start){
-				frame.start = arParams.second.start * this.fps;
-				frame.current.local = frame.current.global - frame.start;
-			}
-
-			//wait for animation time
-			if(frame.current.global < frame.start){
-				this.in_progress = true;
-				return false;
-			}
-			
-			//convert endinf second to frame
-			if(arParams.second.start && arParams.second.length){
-				frame.end = (arParams.second.start + arParams.second.length) * this.fps;	
-				frame.diff = frame.end - frame.start;
-			} else {
-				frame.end = frame.start;	
-				frame.diff = 0;			
-			}
-			
-			//if last frame has been played
-			if(frame.current.global <= frame.end){
-				this.in_progress = true;
-			}
-			
-			return frame;
-		}		
-
-	</script>
-    <style type="text/css">
-      canvas { border: 2px solid black; }
-    </style>
+    <title>coldshine's portfolio</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    
+	<link rel="stylesheet" type="text/css" href="css/styles.css" />    
+    <link rel="stylesheet" type="text/css" href="css/jquery.jscrollpane.css" />    
+	
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.animation.easing.js"></script>
+    <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="js/jquery.jscrollpane.js"></script>
+    <script type="text/javascript" src="js/scripts.js?v01"></script>
   </head>
-  <body onload="init();">
-    <canvas id="canvas" width="900" height="500"></canvas>
+  <body class="nojs">
+	<div id="jScrollPane" class="wrapper">
+		<div class="h-scroll">
+			<div id="projects" class="pages">
+				<div class="header">
+					<div class="logo">&nbsp;</div>
+					<div class="heading">
+						<h1>Портфолио</h1>
+					</div>				
+					<hr />
+				</div>
+				<div class="content">
+					<div class="text-block">						
+						<div class="left-col">
+							<h2>Мои проекты с нуля*</h2>
+							<ul>
+								<li><a href="http://volunteer.sochi2014.com/">Сочи 2014 &ndash; Волонтеры</a></li>
+								<li><a href="http://culture.sochi2014.com/">Сочи 2014 &ndash; Культурная Олимпиада</a></li>
+								<li><a href="http://aktivnoetv.ru/">Актив ТВ</a></li>
+								<li><a href="http://lukoil.ws/">Лукойл &ndash; Западная сибирь</a></li>
+								<li><a href="http://alrosa.ru/">Алроса</a></li>
+								<li><a href="http://cars.indep.ru/">Независимость &ndash; Volvo</a></li>
+								<li><a href="http://mazdacenter.ru/">Независимость &ndash; Mazda</a></li>
+							</ul>
+							<p class="small">* - в основном: архитектура БД, настройки сервера, создание модулей и компонентов cms, имплементация верстки, аудит безопасности, оптимизация проекта;<br/> 
+							частично: js-скрипты и верстка</p>
+						</div>
+						<div class="left-col">
+							<h2>Участвовал в разработке</h2>
+							<ul>
+								<li><a href="http://spoootnik.ru/">LG Spoootnik</a></li>
+								<li><a href="http://yota.ru/">Yota</a></li>
+								<li><a href="http://ankor.ru/">Ankor</a></li>
+								<li><a href="http://audicenter.ru/">Независимость &ndash; Audi</a></li>
+							</ul>
+						</div>
+						<div class="left-col">
+							<h2>Поддержка</h2>
+							<ul>
+								<li><a href="http://sochi2014.com/">Сочи 2014</a></li>
+								<li><a href="http://talisman.sochi2014.com/">Сочи 2014 &ndash; Талисман</a></li>
+								<li><a href="http://tatler.ru/">Tatler</a></li>
+								<li><a href="http://panasonic.ru/">Panasonic</a></li>
+							</ul>
+						</div>
+						<div class="clear"></div>	
+					</div>
+				</div>
+				<div class="r-arrow">
+					<a href="#tech">&gt;</a>
+				</div>																			
+			</div>			
+			<div id="tech" class="pages">
+				<div class="header">
+					<div class="heading">
+						<h1>Технологии</h1>
+					</div>                
+					<div class="clear"></div>
+					<hr />
+				</div>
+				<div class="content">
+					<div class="text-block">  
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://www.1c-bitrix.ru/products/cms/">1C-Битрикс: Управление Сайтом</a>
+						</div>
+						<div class="right-col">
+							написание собственных компонентов / модулей любой сложности
+						</div>
+						<div class="clear"></div>
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://php.net/">php</a>
+						</div>
+						<div class="right-col">
+							написание собственного / разбор чужого кода любой сложности
+						</div>
+						<div class="clear"></div>
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://ru.wikipedia.org/wiki/Объектно-ориентированное_программирование">ооп</a>
+						</div>
+						<div class="right-col">
+							знакомство с основами, понимание принципов и сути паттернов
+						</div>
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://ru.wikipedia.org/wiki/Регулярные_выражения">regexp</a>
+						</div>
+						<div class="right-col">
+							любой сложности
+						</div>
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://mysql.ru/">MySQL</a>
+						</div>
+						<div class="right-col">
+							понимание работы и отладки сложных запросов, транзакций
+						</div>
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://ru.wikipedia.org/wiki/HTML">html</a>, 
+							<a href="http://ru.wikipedia.org/wiki/Document_Object_Model">dom</a>,
+							<a href="http://ru.wikipedia.org/wiki/css">css</a>,
+							<a href="http://ru.wikipedia.org/wiki/Css#.D0.A3.D1.80.D0.BE.D0.B2.D0.B5.D0.BD.D1.8C_3_.28CSS3.29">css 3</a>
+						</div>
+						<div class="right-col">
+							знание основ и спецификаций w3c
+						</div>
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://ru.wikipedia.org/wiki/HTML5">html 5</a>,
+							<a href="http://ru.wikipedia.org/wiki/canvas">canvas</a>
+						</div>
+						<div class="right-col">
+							написание собственных web-приложений
+						</div>
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://ru.wikipedia.org/wiki/DHTML">dhtml</a>, 
+							<a href="http://javascript.ru/">js</a>,
+							<a href="http://ru.wikipedia.org/wiki/AJAX">ajax</a>
+						</div>
+						<div class="right-col">
+							написание кода любой сложности
+						</div>
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://jquery.com/">jQuery</a>
+						</div>
+						<div class="right-col">
+							написание плагинов любой сложности
+						</div>
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://ru.wikipedia.org/wiki/xml">xml</a>, 
+							<a href="http://ru.wikipedia.org/wiki/JSON">json</a>,
+							<a href="http://ru.wikipedia.org/wiki/SOAP">SOAP</a>
+						</div>
+						<div class="right-col">
+							понимание стандартов обмена данными между серверами
+						</div>
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							iPhone, iOs, Android
+						</div>
+						<div class="right-col">
+							оптимизация кода под мобильные устройства
+						</div>                        
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://ru.wikipedia.org/wiki/Subversion">svn</a>,
+							<a href="http://ru.wikipedia.org/wiki/Git">git</a>
+						</div>
+						<div class="right-col">
+							работа через консоль, умение настраивать под Битрикс<br/>(с вынесением ядра из репозитория)
+						</div>                        
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://ru.wikipedia.org/wiki/Unix">unix</a> (Linux, SunOS)
+						</div>
+						<div class="right-col">
+							знание основных консольных комманд
+						</div>                        
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://ru.wikipedia.org/wiki/bash">bash</a>
+						</div>
+						<div class="right-col">
+							написание простых скриптов
+						</div>                        
+						<div class="clear"></div>                        
+						<!--New row-->                      
+						<div class="left-col">
+							<a href="http://ru.wikipedia.org/wiki/Jira">jira</a>,
+							<a href="http://ru.wikipedia.org/wiki/Mantis_(программа)">mantis</a>
+						</div>
+						<div class="right-col">
+							умение работать с системами управлением проектами
+						</div>                        
+						<div class="clear"></div>                        
+						<!--New row-->                      
+					</div>
+					<div class="clear"></div>    
+				</div>
+				<div class="l-arrow">
+					<a href="#projects">&lt;</a>
+				</div>                                                                            
+				<div class="r-arrow">
+					<a href="#education">&gt;</a>
+				</div>
+			</div>  
+			<div id="education" class="pages">
+				<div class="header">
+					<div class="heading">
+						<h1>Обо мне</h1>
+					</div>				
+					<hr />
+				</div>
+				<div class="content">
+					<div class="text-block">
+						<h2>Профессиональный опыт:</h2>
+						<ul>
+							<li>01.2011 - продолжаю работать, <a href="http://www.articulmedia.ru/">Articul Media</a></li>
+							<li>10.2008 - 12.2010, <a href="http://www.adv.ru/">ADV Web-Ingineering</a></li>
+						</ul>	
+						<h2>Образование:</h2>						
+						<ul>
+							<li>2003 - 2008, <a href="http://www.mami.ru/">МГТУ МАМИ</a></li>
+						</ul>	
+						<h2>Манифест:</h2>						
+						<p>Только качественные работы. Оптимально по времени. Дорого.</p>
+					</div>
+					<div class="l-arrow">
+						<a href="#tech">&lt;</a>
+					</div>																			
+				</div>
+			</div>
+			<div class="clear"></div>          
+		</div>
+	</div>
+	<div class="contacts">
+        <p>Савченков Дмитрий Николаевич</p>
+        <p><a href="mailto:bitrixdev@gmail.com">bitrixdev@gmail.com</a></p>            
+        <p>8 (916) 591-98-54</p>
+    </div>
+	<div class="copyright">
+        &copy;&nbsp;2011&nbsp;<a href="mailto:bitrixdev@gmail.com">Dmitry&nbsp;Savchenkov</a>
+    </div>
   </body>
 </html>
