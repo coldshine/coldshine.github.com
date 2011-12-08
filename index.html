@@ -1,73 +1,149 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
-    <title>Coldshine.ru</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="keywords" content="bitrix разработка сайтов разработчик программист" />
-    <meta name="description" content="VIP - разработка сайтов на Bitrix" />
-    <style type="text/css">
-    /* Fonts (including not standart fonts) */
-        @font-face {
-
-            font-family: "lp";
-            src: url("fonts/lp.eot");
-            src: url("fonts/lp.eot?#iefix") format("eot"),
-                 url("fonts/lp.woff") format("woff"),
-                 url("fonts/lp.ttf") format("truetype");
-                 /*url("fonts/lp.svg#ZVCRutKnaP") format("svg");*/
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        * {margin:0; padding:0;}
-        html, body {
-            height:100%; 
-            width:100%;
-        }
-        body {
-            color:#fff; 
-            background-color:#000;
-        }
-        
-        #wrap{ 
-            position: relative;
-            height : 100%;
-        }
-        #holder{
-            text-align: right;
-            position: relative;
-            top: 45%;
-            left: 38%;
-            width: 295px;
-        }
-        #header-1{            
-            font-size:48px; 
-            display: inline; 
-            font-family: lp; 
-        }
-        #header-2{
-            display: inline; 
-        }
-    </style>
+<html>
+  <head>
+    <title>Canvas tutorial template</title>
+	<script type="text/javascript" src="js/classes/dbg.js"></script>
+	<script type="text/javascript" src="js/classes/tools.js"></script>
+	<script type="text/javascript" src="js/classes/draw.js"></script>
     <script type="text/javascript">
+		var ctx;
+		function init() {
+			ctx = document.getElementById('canvas').getContext('2d');  			
+			timeline.do();
+		}
+		
+		//this is a general class	
+		var timeline = {
+			currentFrame: 0,
+			fps: 24, //frame per second
+			//play_animation: true, 
+			debug: true,
+			in_progress: false, //if true we should continue loop
+			center_point: {x:175, y:175} //default center point of all objects
+		};
 
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-25012734-2']);
-	  _gaq.push(['_trackPageview']);
+		timeline.do = function(){
+			var _instance = this;
+			this.currentFrame++;
+			ctx.clearRect(0,0,500,500);
 
-	  (function() {
-		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
+			if(this.debug) 
+				dbg.draw("currentFrame = "+this.currentFrame);
+			
+			//First arc
+			var arParams = {
+				angle:{start:285,end:255}, 
+				second:{start:1,length:1},
+				radius:50
+			}
+			draw.doubleArc(arParams);	
 
-    </script>    
-</head>
-<body>
-<div id="wrap">
-    <div id="holder">
-        <span id="header-1">[coldshine.ru]</span><br/>
-        Скоро открытие!
-    </div>  
-</div>
-</body>
+			//First arc text			
+			var arParams = {
+				point:{x:166, y:130},
+				second:{start:2},
+				text: "1/2"
+			}
+			draw.text(arParams);	
+			
+			//Second arc
+			var arParams = {
+				angle:{start:190,end:170}, 
+				second:{start:2,length:1},
+				radius:60
+			}			
+			draw.doubleArc(arParams);	
+
+			//Second arc text			
+			var arParams = {
+				point:{x:166, y:-175+61},
+				second:{start:3},
+				text: "1/4",
+				rotate: 90
+			}
+			draw.text(arParams);			
+
+            //Third arc
+            var arParams = {
+                angle:{start:100,end:80}, 
+                second:{start:3,length:1},
+                radius:70
+            }
+            draw.doubleArc(arParams);    
+
+            //Third arc text            
+            var arParams = {
+                point:{x:167, y:175+70},
+                second:{start:4},
+                text: "1/8"
+            }
+            draw.text(arParams);  
+
+			//Fourth circle
+            var arParams = {
+                angle:{start:90,end:90}, 
+                second:{start:3.5,length:1},
+                radius:80
+            }
+			draw.doubleArc(arParams);
+
+            var arParams = {
+                point:{x:400,y:175},
+                second:{start:5,length:3},
+            }
+			draw.moveCenterPointX(arParams);	
+            
+			//loop
+			if(this.in_progress){
+				setTimeout(function(){				
+					_instance.do()
+				}, parseInt(1000/_instance.fps));
+			}
+		}						
+
+		timeline.getFrameData = function(arParams){
+		
+			this.in_progress = false;
+				
+			var frame = {};
+			frame.current = {};
+			
+			frame.current.global = this.currentFrame;
+			
+			//convert starting second to frame
+			if(arParams.second.start){
+				frame.start = arParams.second.start * this.fps;
+				frame.current.local = frame.current.global - frame.start;
+			}
+
+			//wait for animation time
+			if(frame.current.global < frame.start){
+				this.in_progress = true;
+				return false;
+			}
+			
+			//convert endinf second to frame
+			if(arParams.second.start && arParams.second.length){
+				frame.end = (arParams.second.start + arParams.second.length) * this.fps;	
+				frame.diff = frame.end - frame.start;
+			} else {
+				frame.end = frame.start;	
+				frame.diff = 0;			
+			}
+			
+			//if last frame has been played
+			if(frame.current.global <= frame.end){
+				this.in_progress = true;
+			}
+			
+			return frame;
+		}		
+
+	</script>
+    <style type="text/css">
+      canvas { border: 2px solid black; }
+    </style>
+  </head>
+  <body onload="init();">
+    <canvas id="canvas" width="900" height="500"></canvas>
+  </body>
 </html>

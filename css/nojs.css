@@ -1,0 +1,36 @@
+.nojs .contacts{
+    position: absolute;
+}
+.nojs .copyright{
+    position: static;
+    padding-right: 60px;
+    padding-bottom: 60px;
+}
+
+.nojs .wrapper{
+    padding-left: 60px;
+}
+
+.nojs .pages{ 
+    width: 100%;
+    position: static;
+}
+
+.nojs .h-scroll{
+    width: auto;
+}
+
+.nojs .r-arrow, .nojs .l-arrow{
+    display: none;
+}
+
+.nojs .logo
+{
+  display: none;
+}
+
+.nojs .header .heading,
+.nojs .content
+{
+  margin-left:23px;
+}
