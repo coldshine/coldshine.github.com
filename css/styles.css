@@ -175,8 +175,9 @@ canvas{
 .l-arrow a, .r-arrow a
 {
   text-decoration:none;
-  font-size:125px;
   color: #000;
+  font-size:125px;
+  line-height:125px;
 }
 
 
